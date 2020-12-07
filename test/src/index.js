@@ -2832,6 +2832,33 @@ test('When loadOptions promise is rejected then dispatch error', async (t) => {
   select.$destroy();
 });
 
+test('When items change then selectedValue should also update', async (t) => {
+  const select = new Select({
+    target,
+    props: {
+      items,
+      selectedValue: {value: 'chips', label: 'Chips'},
+    },
+  });
+
+  await wait(0);
+
+  select.$set({items: [
+    {value: 'chocolate', label: 'Chocolate'},
+    {value: 'pizza', label: 'Pizza'},
+    {value: 'cake', label: 'Cake'},
+    {value: 'chips', label: 'Loaded Fries'},
+    {value: 'ice-cream', label: 'Ice Cream'},
+  ]})
+  
+  await wait(0);
+  
+  t.ok(select.selectedValue.label === 'Loaded Fries');
+  t.ok(target.querySelector('.selectedItem .selection').innerHTML === 'Loaded Fries');
+
+  select.$destroy();
+});
+
 
 function focus(element, setFocus) {
   return new Promise(fulfil => {
